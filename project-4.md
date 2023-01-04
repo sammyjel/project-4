@@ -70,7 +70,7 @@ I set up Express, an adaptable Node.js web application framework, to add functio
 
 Additionally, the mongoose package will be installed to offer a simple, schema-based way to represent the application data. This will produce a database structure for the book registration data.
 
-I used the command 'sudo npm install express mongoose' to install Express with the mongoose package, and the results are shown below:
+I used the command `sudo npm install express mongoose` to install Express with the mongoose package, and the results are shown below:
 
 ![express mongoose](./images/express%20mongoose.png)
 
@@ -141,8 +141,105 @@ I made an AngularJS access to link the web page to Express and perform operation
 
 I made a script.js file and put the script below it after making a directory called public inside the Books folder.
 
-When I used the command `sudo npm install express mongoose` to install Express with the mongoose package, the following output was produced:
+`var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+  $http( {
+    method: 'GET',
+    url: '/book'
+  }).then(function successCallback(response) {
+    $scope.books = response.data;
+  }, function errorCallback(response) {
+    console.log('Error: ' + response);
+  });
+  $scope.del_book = function(book) {
+    $http( {
+      method: 'DELETE',
+      url: '/book/:isbn',
+      params: {'isbn': book.isbn}
+    }).then(function successCallback(response) {
+      console.log(response);
+    }, function errorCallback(response) {
+      console.log('Error: ' + response);
+    });
+  };
+  $scope.add_book = function() {
+    var body = '{ "name": "' + $scope.Name + 
+    '", "isbn": "' + $scope.Isbn +
+    '", "author": "' + $scope.Author + 
+    '", "pages": "' + $scope.Pages + '" }';
+    $http({
+      method: 'POST',
+      url: '/book',
+      data: body
+    }).then(function successCallback(response) {
+      console.log(response);
+    }, function errorCallback(response) {
+      console.log('Error: ' + response);
+    });
+  };
+});`
 
+In the public folder, I also made another file with the name index.html and added the script below to it.
+
+`<!doctype html>
+<html ng-app="myApp" ng-controller="myCtrl">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div>
+      <table>
+        <tr>
+          <td>Name:</td>
+          <td><input type="text" ng-model="Name"></td>
+        </tr>
+        <tr>
+          <td>Isbn:</td>
+          <td><input type="text" ng-model="Isbn"></td>
+        </tr>
+        <tr>
+          <td>Author:</td>
+          <td><input type="text" ng-model="Author"></td>
+        </tr>
+        <tr>
+          <td>Pages:</td>
+          <td><input type="number" ng-model="Pages"></td>
+        </tr>
+      </table>
+      <button ng-click="add_book()">Add</button>
+    </div>
+    <hr>
+    <div>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Isbn</th>
+          <th>Author</th>
+          <th>Pages</th>
+
+        </tr>
+        <tr ng-repeat="book in books">
+          <td>{{book.name}}</td>
+          <td>{{book.isbn}}</td>
+          <td>{{book.author}}</td>
+          <td>{{book.pages}}</td>
+
+          <td><input type="button" value="Delete" data-ng-click="del_book(book)"></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>`
+
+After completing this, I launched the server using the `sudo node server.js` command and checked my browser for the desired results, as shown below:
+
+![sudo node server](./images/localhost%2033000.png)
+![sudo jode server](./images/localhostadd.png)
+
+All the adjustments performed in the browser were immediately mirrored on my server, confirming that my configurations, as shown in the following image, were accurate:
+
+![mirrored server](./images/parametersin%20the%20terminal.png)
 
 
 
